@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     ui->graphicsView->setScene(mScene);
     ui->graphicsView->show();
-
 }
 
 MainWindow::~MainWindow()
