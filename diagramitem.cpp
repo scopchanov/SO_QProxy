@@ -1,5 +1,4 @@
 #include "diagramitem.h"
-
 #include "arrow.h"
 #include <QPainter>
 #include <QGraphicsScene>

@@ -10,7 +10,7 @@ OptionList::OptionList(QWidget *parent) : QListWidget(parent) {
   setDefaultDropAction(Qt::CopyAction);
   setViewMode(QListView::ListMode);
 
-  for (const QString &workspaceTree : {"Images", "Path", "Connection"}) {
+  for (const QString &workspaceTree : {"ROS Init", "Images", "Path", "ROS Shutdown"}) {
     QListWidgetItem *img = new QListWidgetItem;
     img->setText(workspaceTree);
     img->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable |

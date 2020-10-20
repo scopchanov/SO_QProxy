@@ -21,6 +21,7 @@ SOURCES += \
     diagramitem.cpp \
     main.cpp \
     mainwindow.cpp \
+    movableitem.cpp \
     optionlist.cpp \
     scene.cpp
 
@@ -29,6 +30,7 @@ HEADERS += \
     customtablewidget.h \
     diagramitem.h \
     mainwindow.h \
+    movableitem.h \
     optionlist.h \
     scene.h
 

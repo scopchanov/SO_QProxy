@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QPushButton>
+#include <QLabel>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -10,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     ui->graphicsView->setScene(mScene);
     ui->graphicsView->show();
+    ui->graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 }
 
 MainWindow::~MainWindow()

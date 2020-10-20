@@ -3,6 +3,8 @@
 
 #include <QGraphicsScene>
 
+#include "movableitem.h"
+
 class Scene : public QGraphicsScene
 {
 public:
@@ -12,6 +14,9 @@ protected:
   void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
   void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
   void dropEvent(QGraphicsSceneDragDropEvent *event);
+
+private:
+  MovableItem *mMovableItem;
 };
 
 #endif // SCENE_H

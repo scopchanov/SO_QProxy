@@ -37,7 +37,6 @@ void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     qreal arrowSize = 20;
     painter->setPen(myPen);
     painter->setBrush(myColor);
-//! [4] //! [5]
 
     QLineF centerLine(myStartItem->pos(), myEndItem->pos());
     QPolygonF endPolygon = myEndItem->polygon();
