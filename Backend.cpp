@@ -9,7 +9,6 @@
 #include <QRadioButton>
 #include <QTableWidget>
 #include <QListWidgetItem>
-#include <QDebug>
 
 Backend::Backend(QObject *parent) :
 	QObject(parent),
@@ -93,7 +92,7 @@ void Backend::setupRosInitTable(QTableWidget *tableWidget, MovableItem *item)
 																  .arg(ridx)));
 			tableWidget->setCellWidget(ridx, 1, btnOutput);
 
-			connect(btnOutput, &QRadioButton::toggled,
+			connect(btnOutput, &QRadioButton::clicked,
 					this, &Backend::onOutputRadioButton);
 		}
 	}
@@ -117,9 +116,9 @@ void Backend::setupImagesTable(QTableWidget *tableWidget, MovableItem *item)
 			tableWidget->setCellWidget(ridx, 0, btnInput);
 			tableWidget->setCellWidget(ridx, 5, btnOutput);
 
-			connect(btnInput, &QRadioButton::toggled,
+			connect(btnInput, &QRadioButton::clicked,
 					this, &Backend::onInputRadioButton);
-			connect(btnOutput, &QRadioButton::toggled,
+			connect(btnOutput, &QRadioButton::clicked,
 					this, &Backend::onOutputRadioButton);
 		}
 	}
@@ -143,9 +142,9 @@ void Backend::setupPathTable(QTableWidget *tableWidget, MovableItem *item)
 			tableWidget->setCellWidget(ridx, 0, btnInput);
 			tableWidget->setCellWidget(ridx, 3, btnOutput);
 
-			connect(btnInput, &QRadioButton::toggled,
+			connect(btnInput, &QRadioButton::clicked,
 					this, &Backend::onInputRadioButton);
-			connect(btnOutput, &QRadioButton::toggled,
+			connect(btnOutput, &QRadioButton::clicked,
 					this, &Backend::onOutputRadioButton);
 		}
 	}
@@ -169,26 +168,49 @@ void Backend::setupRosShutdownTable(QTableWidget *tableWidget, MovableItem *item
 			tableWidget->setCellWidget(ridx, 0, btnInput);
 			tableWidget->setCellWidget(ridx, 1, btnOutput);
 
-			connect(btnInput, &QRadioButton::toggled,
+			connect(btnInput, &QRadioButton::clicked,
 					this, &Backend::onInputRadioButton);
-			connect(btnOutput, &QRadioButton::toggled,
+			connect(btnOutput, &QRadioButton::clicked,
 					this, &Backend::onOutputRadioButton);
 		}
 	}
+}
+
+void Backend::createArrow()
+{
+	m_scene->addItem(new ArrowItem(m_startNode, m_endNode));
+	m_startNode = nullptr;
+	m_endNode = nullptr;
 }
 
 void Backend::onInputRadioButton(bool checked)
 {
 	m_endNode = checked ? static_cast<QRadioButton *>(sender()) : nullptr;
 
-	if (m_startNode && m_endNode)
-		m_scene->addItem(new ArrowItem(m_startNode, m_endNode));
+	if (!m_startNode || !m_endNode)
+		return;
+
+	if (m_startNode->parentWidget()->parentWidget() ==
+		m_endNode->parentWidget()->parentWidget()) {
+		m_startNode = nullptr;
+		return;
+	}
+
+	createArrow();
 }
 
 void Backend::onOutputRadioButton(bool checked)
 {
 	m_startNode = checked ? static_cast<QRadioButton *>(sender()) : nullptr;
 
-	if (m_startNode && m_endNode)
-		m_scene->addItem(new ArrowItem(m_startNode, m_endNode));
+	if (!m_startNode || !m_endNode)
+		return;
+
+	if (m_startNode->parentWidget()->parentWidget() ==
+		m_endNode->parentWidget()->parentWidget()) {
+		m_endNode = nullptr;
+		return;
+	}
+
+	createArrow();
 }

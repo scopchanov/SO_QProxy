@@ -27,6 +27,7 @@ private:
 	void setupImagesTable(QTableWidget *tableWidget, MovableItem *item);
 	void setupPathTable(QTableWidget *tableWidget, MovableItem *item);
 	void setupRosShutdownTable(QTableWidget *tableWidget, MovableItem *item);
+	void createArrow();
 
 	QGraphicsScene *m_scene;
 	QRadioButton *m_startNode;
