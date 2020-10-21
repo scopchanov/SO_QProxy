@@ -5,8 +5,9 @@
 
 class QRadioButton;
 
-class ArrowItem : public QGraphicsLineItem
+class ArrowItem : public QObject, public QGraphicsLineItem
 {
+	Q_OBJECT
 public:
 
 	enum { Type = UserType + 4 };

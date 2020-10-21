@@ -7,6 +7,7 @@ class QGraphicsScene;
 class QTableWidget;
 class QRadioButton;
 class ListView;
+class MovableItem;
 
 class Backend : public QObject
 {
@@ -21,11 +22,11 @@ public slots:
 	void onItemDropped(int type, const QPointF &pos);
 
 private:
-	QTableWidget *createTable(int type);
-	void setupRosInitTable(QTableWidget *tableWidget);
-	void setupImagesTable(QTableWidget *tableWidget);
-	void setupPathTable(QTableWidget *tableWidget);
-	void setupRosShutdownTable(QTableWidget *tableWidget);
+	QTableWidget *createTable(int type, MovableItem *item);
+	void setupRosInitTable(QTableWidget *tableWidget, MovableItem *item);
+	void setupImagesTable(QTableWidget *tableWidget, MovableItem *item);
+	void setupPathTable(QTableWidget *tableWidget, MovableItem *item);
+	void setupRosShutdownTable(QTableWidget *tableWidget, MovableItem *item);
 
 	QGraphicsScene *m_scene;
 	QRadioButton *m_startNode;

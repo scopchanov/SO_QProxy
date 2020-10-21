@@ -53,32 +53,32 @@ void Backend::onItemDropped(int type, const QPointF &pos)
 	item->setPos(pos);
 	m_scene->addItem(item);
 
-	item->addWidget(createTable(type));
+	item->addWidget(createTable(type, item));
 }
 
-QTableWidget *Backend::createTable(int type)
+QTableWidget *Backend::createTable(int type, MovableItem *item)
 {
 	auto *tableWidget = new QTableWidget;
 
 	switch (type) {
 	case IT_RosInit:
-		setupRosInitTable(tableWidget);
+		setupRosInitTable(tableWidget, item);
 		break;
 	case IT_Images:
-		setupImagesTable(tableWidget);
+		setupImagesTable(tableWidget, item);
 		break;
 	case IT_Path:
-		setupPathTable(tableWidget);
+		setupPathTable(tableWidget, item);
 		break;
 	case IT_RosShutDown:
-		setupRosShutdownTable(tableWidget);
+		setupRosShutdownTable(tableWidget, item);
 		break;
 	}
 
 	return tableWidget;
 }
 
-void Backend::setupRosInitTable(QTableWidget *tableWidget)
+void Backend::setupRosInitTable(QTableWidget *tableWidget, MovableItem *item)
 {
 	tableWidget->setRowCount(1);
 	tableWidget->setColumnCount(2);
@@ -86,6 +86,8 @@ void Backend::setupRosInitTable(QTableWidget *tableWidget)
 	for (int ridx = 0; ridx < tableWidget->rowCount(); ridx++) {
 		for (int cidx = 0; cidx < tableWidget->columnCount(); cidx++) {
 			auto *btnOutput = new QRadioButton(tableWidget);
+
+			btnOutput->setProperty("item", QVariant::fromValue(item));
 
 			tableWidget->setItem(ridx, cidx, new QTableWidgetItem(QString("%1")
 																  .arg(ridx)));
@@ -97,7 +99,7 @@ void Backend::setupRosInitTable(QTableWidget *tableWidget)
 	}
 }
 
-void Backend::setupImagesTable(QTableWidget *tableWidget)
+void Backend::setupImagesTable(QTableWidget *tableWidget, MovableItem *item)
 {
 	tableWidget->setRowCount(6);
 	tableWidget->setColumnCount(6);
@@ -106,6 +108,9 @@ void Backend::setupImagesTable(QTableWidget *tableWidget)
 		for (int cidx = 0; cidx < tableWidget->columnCount(); cidx++) {
 			auto *btnInput = new QRadioButton(tableWidget);
 			auto *btnOutput = new QRadioButton(tableWidget);
+
+			btnInput->setProperty("item", QVariant::fromValue(item));
+			btnOutput->setProperty("item", QVariant::fromValue(item));
 
 			tableWidget->setItem(ridx, cidx, new QTableWidgetItem(QString("%1")
 																  .arg(ridx)));
@@ -120,7 +125,7 @@ void Backend::setupImagesTable(QTableWidget *tableWidget)
 	}
 }
 
-void Backend::setupPathTable(QTableWidget *tableWidget)
+void Backend::setupPathTable(QTableWidget *tableWidget, MovableItem *item)
 {
 	tableWidget->setRowCount(4);
 	tableWidget->setColumnCount(4);
@@ -129,6 +134,9 @@ void Backend::setupPathTable(QTableWidget *tableWidget)
 		for (int cidx = 0; cidx < tableWidget->columnCount(); cidx++) {
 			auto *btnInput = new QRadioButton(tableWidget);
 			auto *btnOutput = new QRadioButton(tableWidget);
+
+			btnInput->setProperty("item", QVariant::fromValue(item));
+			btnOutput->setProperty("item", QVariant::fromValue(item));
 
 			tableWidget->setItem(ridx, cidx, new QTableWidgetItem(QString("%1")
 																  .arg(ridx)));
@@ -143,7 +151,7 @@ void Backend::setupPathTable(QTableWidget *tableWidget)
 	}
 }
 
-void Backend::setupRosShutdownTable(QTableWidget *tableWidget)
+void Backend::setupRosShutdownTable(QTableWidget *tableWidget, MovableItem *item)
 {
 	tableWidget->setRowCount(1);
 	tableWidget->setColumnCount(2);
@@ -152,6 +160,9 @@ void Backend::setupRosShutdownTable(QTableWidget *tableWidget)
 		for (int cidx = 0; cidx < tableWidget->columnCount(); cidx++) {
 			QRadioButton *btnInput = new QRadioButton(tableWidget);
 			QRadioButton *btnOutput = new QRadioButton(tableWidget);
+
+			btnInput->setProperty("item", QVariant::fromValue(item));
+			btnOutput->setProperty("item", QVariant::fromValue(item));
 
 			tableWidget->setItem(ridx, cidx, new QTableWidgetItem(QString("%1")
 																  .arg(ridx)));

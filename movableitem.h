@@ -1,11 +1,11 @@
 #ifndef MOVABLEITEM_H
 #define MOVABLEITEM_H
 
-#include <QGraphicsPathItem>
+#include <QGraphicsRectItem>
 
 class QVBoxLayout;
 
-class MovableItem : public QObject, public QGraphicsPathItem
+class MovableItem : public QObject, public QGraphicsRectItem
 {
 	Q_OBJECT
 public:
