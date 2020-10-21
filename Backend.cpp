@@ -1,6 +1,7 @@
 #include "Backend.h"
 #include "AppGlobals.h"
 #include "MovableItem.h"
+#include "ArrowItem.h"
 #include "ListView.h"
 #include <QBoxLayout>
 #include <QSplitter>
@@ -8,10 +9,13 @@
 #include <QRadioButton>
 #include <QTableWidget>
 #include <QListWidgetItem>
+#include <QDebug>
 
 Backend::Backend(QObject *parent) :
 	QObject(parent),
-	m_scene(new QGraphicsScene(this))
+	m_scene(new QGraphicsScene(this)),
+	m_startNode(nullptr),
+	m_endNode(nullptr)
 {
 
 }
@@ -76,75 +80,104 @@ QTableWidget *Backend::createTable(int type)
 
 void Backend::setupRosInitTable(QTableWidget *tableWidget)
 {
-	tableWidget->setColumnCount(2);
 	tableWidget->setRowCount(1);
+	tableWidget->setColumnCount(2);
 
 	for (int ridx = 0; ridx < tableWidget->rowCount(); ridx++) {
 		for (int cidx = 0; cidx < tableWidget->columnCount(); cidx++) {
-			auto *radioButton = new QRadioButton(tableWidget);
+			auto *btnOutput = new QRadioButton(tableWidget);
 
-			tableWidget->setItem(ridx, cidx, new QTableWidgetItem(QString("%1").arg(ridx)));
-			tableWidget->setCellWidget(cidx, 1, radioButton);
+			tableWidget->setItem(ridx, cidx, new QTableWidgetItem(QString("%1")
+																  .arg(ridx)));
+			tableWidget->setCellWidget(ridx, 1, btnOutput);
 
-			// Before connecting the arrow let's make sure the connection between
-			// QRadioButton and the subclassed QTableWidget is correct
-
-			//QObject::connect(radio1, &QRadioButton::clicked, wgt, &MovableItem::itemMoved);
+			connect(btnOutput, &QRadioButton::toggled,
+					this, &Backend::onOutputRadioButton);
 		}
 	}
 }
 
 void Backend::setupImagesTable(QTableWidget *tableWidget)
 {
-	tableWidget->setColumnCount(6);
 	tableWidget->setRowCount(6);
+	tableWidget->setColumnCount(6);
 
 	for (int ridx = 0; ridx < tableWidget->rowCount(); ridx++) {
 		for (int cidx = 0; cidx < tableWidget->columnCount(); cidx++) {
-			auto *radio1 = new QRadioButton(tableWidget);
-			auto *radio2 = new QRadioButton(tableWidget);
-			auto *item = new QTableWidgetItem(QString("%1").arg(ridx));
+			auto *btnInput = new QRadioButton(tableWidget);
+			auto *btnOutput = new QRadioButton(tableWidget);
 
-			tableWidget->setItem(ridx,cidx,item);
+			tableWidget->setItem(ridx, cidx, new QTableWidgetItem(QString("%1")
+																  .arg(ridx)));
+			tableWidget->setCellWidget(ridx, 0, btnInput);
+			tableWidget->setCellWidget(ridx, 5, btnOutput);
 
-			tableWidget->setCellWidget(cidx, 0, radio1);
-			tableWidget->setCellWidget(cidx, 5, radio2);
+			connect(btnInput, &QRadioButton::toggled,
+					this, &Backend::onInputRadioButton);
+			connect(btnOutput, &QRadioButton::toggled,
+					this, &Backend::onOutputRadioButton);
 		}
 	}
 }
 
 void Backend::setupPathTable(QTableWidget *tableWidget)
 {
-	tableWidget->setColumnCount(4);
 	tableWidget->setRowCount(4);
+	tableWidget->setColumnCount(4);
 
 	for (int ridx = 0; ridx < tableWidget->rowCount(); ridx++) {
 		for (int cidx = 0; cidx < tableWidget->columnCount(); cidx++) {
-			auto *radio1 = new QRadioButton(tableWidget);
-			auto *radio2 = new QRadioButton(tableWidget);
-			auto* item = new QTableWidgetItem(QString("%1").arg(ridx));
+			auto *btnInput = new QRadioButton(tableWidget);
+			auto *btnOutput = new QRadioButton(tableWidget);
 
-			tableWidget->setItem(ridx,cidx,item);
-			tableWidget->setCellWidget(cidx, 0, radio1);
-			tableWidget->setCellWidget(cidx, 3, radio2);
+			tableWidget->setItem(ridx, cidx, new QTableWidgetItem(QString("%1")
+																  .arg(ridx)));
+			tableWidget->setCellWidget(ridx, 0, btnInput);
+			tableWidget->setCellWidget(ridx, 3, btnOutput);
+
+			connect(btnInput, &QRadioButton::toggled,
+					this, &Backend::onInputRadioButton);
+			connect(btnOutput, &QRadioButton::toggled,
+					this, &Backend::onOutputRadioButton);
 		}
 	}
 }
 
 void Backend::setupRosShutdownTable(QTableWidget *tableWidget)
 {
-	tableWidget->setColumnCount(2);
 	tableWidget->setRowCount(1);
+	tableWidget->setColumnCount(2);
 
 	for (int ridx = 0; ridx < tableWidget->rowCount(); ridx++) {
 		for (int cidx = 0; cidx < tableWidget->columnCount(); cidx++) {
-			QRadioButton *radio1 = new QRadioButton(tableWidget);
-			QRadioButton *radio2 = new QRadioButton(tableWidget);
-			auto* item = new QTableWidgetItem(QString("%1").arg(ridx));
+			QRadioButton *btnInput = new QRadioButton(tableWidget);
+			QRadioButton *btnOutput = new QRadioButton(tableWidget);
 
-			tableWidget->setItem(ridx,cidx,item);
-			tableWidget->setCellWidget(cidx, 0, radio1);
-			tableWidget->setCellWidget(cidx, 3, radio2);
+			tableWidget->setItem(ridx, cidx, new QTableWidgetItem(QString("%1")
+																  .arg(ridx)));
+			tableWidget->setCellWidget(ridx, 0, btnInput);
+			tableWidget->setCellWidget(ridx, 1, btnOutput);
+
+			connect(btnInput, &QRadioButton::toggled,
+					this, &Backend::onInputRadioButton);
+			connect(btnOutput, &QRadioButton::toggled,
+					this, &Backend::onOutputRadioButton);
 		}
 	}
+}
+
+void Backend::onInputRadioButton(bool checked)
+{
+	m_endNode = checked ? static_cast<QRadioButton *>(sender()) : nullptr;
+
+	if (m_startNode && m_endNode)
+		m_scene->addItem(new ArrowItem(m_startNode, m_endNode));
+}
+
+void Backend::onOutputRadioButton(bool checked)
+{
+	m_startNode = checked ? static_cast<QRadioButton *>(sender()) : nullptr;
+
+	if (m_startNode && m_endNode)
+		m_scene->addItem(new ArrowItem(m_startNode, m_endNode));
 }

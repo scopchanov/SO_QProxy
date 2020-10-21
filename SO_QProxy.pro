@@ -3,24 +3,22 @@ QT += gui widgets
 CONFIG += c++11
 
 SOURCES += \
+    ArrowItem.cpp \
     Backend.cpp \
     GraphicsView.cpp \
     ListView.cpp \
     ResizableWidget.cpp \
-    arrow.cpp \
-    diagramitem.cpp \
     main.cpp \
     MovableItem.cpp \
     MainWindow.cpp
 
 HEADERS += \
     AppGlobals.h \
+    ArrowItem.h \
     Backend.h \
     GraphicsView.h \
     ListView.h \
     ResizableWidget.h \
-    arrow.h \
-    diagramitem.h \
     MovableItem.h \
     MainWindow.h
 
