@@ -1,26 +1,18 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QGraphicsView>
+#include <QWidget>
 
-#include "scene.h"
+class Backend;
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
+class MainWindow : public QWidget {
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
-
+	Q_OBJECT
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+	explicit MainWindow(QWidget *parent = nullptr);
 
 private:
-    Ui::MainWindow *ui;
-    Scene *mScene;
-
+	Backend *m_backend;
 };
+
 #endif // MAINWINDOW_H

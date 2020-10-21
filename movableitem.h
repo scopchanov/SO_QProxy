@@ -3,17 +3,23 @@
 
 #include <QGraphicsPathItem>
 
+class QVBoxLayout;
 
-class MovableItem : public QGraphicsPathItem
+class MovableItem : public QObject, public QGraphicsPathItem
 {
+	Q_OBJECT
 public:
-    MovableItem(QWidget *parent = Q_NULLPTR);
+	MovableItem(QGraphicsItem *parent = nullptr);
 
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
-signals:
-    void itemMoved(const QPoint &p);
+	void addWidget(QWidget *widget);
 
+private:
+	QVBoxLayout *m_layout;
+
+signals:
+	void itemMoved(const QPointF &p);
 };
 
 #endif // MOVABLEITEM_H

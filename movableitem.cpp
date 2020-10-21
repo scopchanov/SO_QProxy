@@ -1,23 +1,49 @@
-#include "movableitem.h"
-#include <QGraphicsScene>
+#include "MovableItem.h"
+#include "ResizableWidget.h"
+#include <QBoxLayout>
+#include <QSizeGrip>
+#include <QGraphicsProxyWidget>
+#include <QPen>
 
-MovableItem::MovableItem(QWidget *parent)
+MovableItem::MovableItem(QGraphicsItem *parent) :
+	QGraphicsPathItem(parent),
+	m_layout(new QVBoxLayout())
 {
-    Q_UNUSED(parent)
+	auto *wgt = new ResizableWidget;
+	auto *proxyControl = new QGraphicsRectItem(this);
+	auto *sizeGrip = new QSizeGrip(wgt);
+	auto *layoutProxy = new QHBoxLayout(wgt);
+	auto *proxy = new QGraphicsProxyWidget(this);
+
+	proxyControl->setPen(QPen(Qt::black));
+	proxyControl->setBrush(QBrush(Qt::darkGreen));
+
+	layoutProxy->addLayout(m_layout);
+	layoutProxy->addWidget(sizeGrip, 0, Qt::AlignRight | Qt::AlignBottom);
+	layoutProxy->setContentsMargins(0, 0, 0, 0);
+
+	connect(wgt, &ResizableWidget::sizeChanged, [wgt, proxyControl](){
+		proxyControl->setRect(wgt->geometry().adjusted(-10, -10, 10, 10));
+	});
+
+	proxy->setPos(10, 10);
+	proxy->setParentItem(proxyControl);
+	proxy->setWidget(wgt);
+
+	proxyControl->setFlags(ItemIsFocusable | ItemIsMovable | ItemIsSelectable);
+	proxyControl->setRect(wgt->geometry().adjusted(-10, -10, 10, 10));
 }
 
-QVariant MovableItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+QVariant MovableItem::itemChange(QGraphicsItem::GraphicsItemChange change,
+								 const QVariant &value)
 {
-    if (change == ItemPositionChange && scene()) {
-        // value is the new position.
-        QPointF newPos = value.toPointF();
-        QRectF rect = scene()->sceneRect();
-        if (!rect.contains(newPos)) {
-            // Keep the item inside the scene rect.
-            newPos.setX(qMin(rect.right(), qMax(newPos.x(), rect.left())));
-            newPos.setY(qMin(rect.bottom(), qMax(newPos.y(), rect.top())));
-            return newPos;
-        }
-    }
-    return QGraphicsItem::itemChange(change, value);
+	if (change == ItemPositionChange && scene())
+		emit itemMoved(value.toPointF());
+
+	return QGraphicsItem::itemChange(change, value);
+}
+
+void MovableItem::addWidget(QWidget *widget)
+{
+	m_layout->addWidget(widget);
 }

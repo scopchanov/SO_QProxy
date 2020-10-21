@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/pix">
+        <file>images/20/grid.png</file>
+    </qresource>
+</RCC>
