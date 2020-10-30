@@ -15,37 +15,17 @@ GraphicsView::GraphicsView(QWidget *parent) :
 
 void GraphicsView::dragEnterEvent(QDragEnterEvent *event)
 {
-	if (event->mimeData()->hasFormat("application"
-									 "/x-qabstractitemmodeldatalist"))
+	if (event->mimeData()->hasFormat("text/plain"))
 	  event->setAccepted(true);
 }
 
 void GraphicsView::dragMoveEvent(QDragMoveEvent *event)
 {
-	if (event->mimeData()->hasFormat("application"
-									 "/x-qabstractitemmodeldatalist"))
+	if (event->mimeData()->hasFormat("text/plain"))
 	  event->setAccepted(true);
 }
 
 void GraphicsView::dropEvent(QDropEvent *event)
 {
-
-	QByteArray encoded = event->mimeData()->
-						 data("application/x-qabstractitemmodeldatalist");
-	QDataStream stream(&encoded, QIODevice::ReadOnly);
-	QVector<int> rosTables;
-	QString newString;
-
-	while (!stream.atEnd()) {
-		QMap<int, QVariant> roleDataMap;
-		int row;
-		int col;
-		bool ok;
-
-		stream >> row >> col >> roleDataMap;
-		rosTables << roleDataMap[Qt::UserRole].toInt(&ok);
-	}
-
-	for (int tableType : rosTables)
-		emit itemDropped(tableType, event->posF());
+	emit itemDropped(event->mimeData()->data("text/plain").toInt(), event->posF());
 }
